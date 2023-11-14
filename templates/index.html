@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css')}}"
+    />
+  </head>
+
+  <body>
+    <form hx-get="http://127.0.0.1:5000/route" hx-target="#routeName">
+      <label class="some-class" for="stravaId">Strava Route ID</label>
+      <input name="stravaId" type="text" />
+      <button>Submit</button>
+    </form>
+    <div id="routeName"></div>
+  </body>
+</html>
