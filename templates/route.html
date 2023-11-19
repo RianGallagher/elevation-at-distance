@@ -1,13 +1,9 @@
 <div class="route-information">
-    <div>Route Name: {{ route_name }}</div>
-    <div>Distance: {{ route_distance }}km</div>
-    <div>Elevation Gain: {{ route_elevation_gain }}m</div>
+  <div>Route Name: {{ route_name }}</div>
+  <div>Distance: {{ route_distance }}km</div>
+  <div>Elevation Gain: {{ route_elevation_gain }}m</div>
 </div>
 
-<form hx-get="http://127.0.0.1:5000/elevation-at-distance" hx-target="#elevation">
-    <label for="distance">Distance</label>
-    <input name="distance" type="number" step="0.1" />
-    <button>Submit</button>
-</form>
+<div>{{ route_chart|safe }}</div>
 
 <div id="elevation"></div>

@@ -7,6 +7,7 @@ import gpxpy.gpx
 from utilities.find_closet_entry import find_closest_entry
 from utilities.format_gpx import format_gpx
 from utilities.strava import request_route_gpx, request_route
+from utilities.create_chart import create_chart
 
 
 load_dotenv()
@@ -34,13 +35,16 @@ def get_route():
     route_name = route["name"]
     route_distance = round(route["distance"] / 1000, 2)
     route_elevation_gain = round(route["elevation_gain"], 2)
+
     raw_route_gpx = request_route_gpx(route_id)
     gpx = gpxpy.parse(raw_route_gpx)
     formatted_gpx = format_gpx(gpx)
 
+    chart_html = create_chart(formatted_gpx)
+
     session["gpx"] = formatted_gpx
 
-    return render_template('route.html', route_name=route_name, route_distance=route_distance, route_elevation_gain=route_elevation_gain)
+    return render_template('route.html', route_chart=chart_html, route_name=route_name, route_distance=route_distance, route_elevation_gain=route_elevation_gain)
 
 
 @app.route("/elevation-at-distance")
@@ -52,8 +56,8 @@ def get_elevation_at_distance():
     gpx = session.get("gpx", 'not set')
     if isinstance(gpx, list):
         closest_entry = find_closest_entry(gpx, distance)
-        closest_distance = round(closest_entry['Distance'], 2)
-        final_elevation = round(closest_entry['Elevation'], 2)
+        closest_distance = round(closest_entry['distance'], 2)
+        final_elevation = round(closest_entry['elevation_gain'], 2)
 
-        return f"<p>The elevation gain at {closest_distance}km is {final_elevation}m.</p>"
+        return render_template('elevation-info.html', closest_distance=closest_distance, final_elevation=final_elevation)
     return "<p>GPX data is required</p>"

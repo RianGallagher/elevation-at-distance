@@ -2,7 +2,8 @@ from .haversine import haversine
 
 
 def format_gpx(gpx):
-    distance_elevation_list = [{'Distance': 0.0, 'Elevation': 0.0}]
+    distance_elevation_list = [
+        {'distance': 0.0, 'elevation': 0, 'elevation_gain': 0.0}]
 
     distance = 0
     elevation = 0
@@ -25,6 +26,6 @@ def format_gpx(gpx):
                         elevation += elevation_difference
 
                     distance_elevation_list.append(
-                        {'Distance': distance, 'Elevation': elevation})
+                        {'distance': distance, 'elevation': item1.elevation, 'elevation_gain': elevation})
 
     return distance_elevation_list

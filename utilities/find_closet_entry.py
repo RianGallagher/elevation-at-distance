@@ -10,13 +10,13 @@ def find_closest_entry(list: list[dict[str, float]], search_item: float):
             break
 
         if (len(search_list) == 2):
-            if (abs(search_list[0]["Distance"] - search_item) < abs(search_list[1]["Distance"] - search_item)):
+            if (abs(search_list[0]["distance"] - search_item) < abs(search_list[1]["distance"] - search_item)):
                 search_list = search_list[:1]
             else:
                 search_list = search_list[1:]
             break
 
-        if (search_list[middle]["Distance"] > search_item):
+        if (search_list[middle]["distance"] > search_item):
             search_list = search_list[:middle]
         else:
             search_list = search_list[middle:]
