@@ -11,6 +11,7 @@ from utilities.find_closet_entry import find_closest_entry
 from utilities.format_gpx import format_gpx
 from utilities.strava import request_route_gpx, request_route
 from utilities.create_chart import create_chart
+from utilities.authentication import save_authentication_details, is_token_expired
 
 
 load_dotenv()
@@ -38,6 +39,9 @@ Session(app)
 
 @app.route("/")
 def index():
+    has_token_expired = is_token_expired()
+    if has_token_expired:
+        return redirect(url_for('refresh_token'))
     return render_template('index.html')
 
 
@@ -61,6 +65,32 @@ def oauth2_authorize():
 
     # redirect the user to the OAuth2 provider authorization URL
     return redirect(provider_data['authorize_url'] + '?' + qs)
+
+
+@app.route('/refresh')
+def refresh_token():
+    provider_data = current_app.config['OAUTH2_PROVIDERS'].get('strava')
+    if provider_data is None:
+        abort(404)
+
+    # make sure that the authorization code is present
+    if 'refresh_token' not in session:
+        abort(401)
+
+    # exchange the authorization code for an access token
+    response = requests.post(provider_data['token_url'], data={
+        'client_id': provider_data['client_id'],
+        'client_secret': provider_data['client_secret'],
+        'refresh_token': session['refresh_token'],
+        'grant_type': 'refresh_token',
+    }, headers={'Accept': 'application/json'})
+
+    if response.status_code != 200:
+        abort(401)
+
+    save_authentication_details(response)
+
+    return redirect(url_for('index'))
 
 
 @app.route('/callback')
@@ -97,13 +127,7 @@ def oauth2_callback():
     if response.status_code != 200:
         abort(401)
 
-    json_response = response.json()
-    oauth2_token = json_response.get('access_token')
-
-    session['strava_token'] = oauth2_token
-
-    if not oauth2_token:
-        abort(401)
+    save_authentication_details(response)
 
     return redirect(url_for('index'))
 
@@ -122,10 +146,9 @@ def get_route():
     formatted_gpx = format_gpx(gpx)
 
     chart_html = create_chart(formatted_gpx)
-
     session["gpx"] = formatted_gpx
 
-    return render_template('route.html', route_chart=chart_html, route_name=route_name, route_distance=route_distance, route_elevation_gain=route_elevation_gain)
+    return render_template('route.html', route_chart=chart_html, route_id=route_id, route_name=route_name, route_distance=route_distance, route_elevation_gain=route_elevation_gain)
 
 
 @app.route("/elevation-at-distance")
