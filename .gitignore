@@ -312,3 +312,4 @@ dmypy.json
 cython_debug/
 
 flask_session/
+.vercel
