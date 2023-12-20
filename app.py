@@ -22,7 +22,7 @@ CORS(app)
 
 SECRET_KEY = os.environ.get('FLASK_SESSION_SECRET_KEY')
 SESSION_TYPE = "filesystem"
-SESSION_FILE_DIR = "tmp"
+SESSION_FILE_DIR = "/tmp"
 app.config.from_object(__name__)
 app.config['OAUTH2_PROVIDERS'] = {
     # Google OAuth 2.0 documentation:
