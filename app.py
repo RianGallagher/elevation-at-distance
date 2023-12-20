@@ -22,6 +22,7 @@ CORS(app)
 
 SECRET_KEY = os.environ.get('FLASK_SESSION_SECRET_KEY')
 SESSION_TYPE = "filesystem"
+SESSION_FILE_DIR = "tmp"
 app.config.from_object(__name__)
 app.config['OAUTH2_PROVIDERS'] = {
     # Google OAuth 2.0 documentation:
@@ -59,8 +60,7 @@ def oauth2_authorize():
         'client_id': provider_data['client_id'],
         'redirect_uri': url_for('oauth2_callback', _external=True),
         'response_type': 'code',
-        'scope': ' '.join(provider_data['scopes']),
-        'state': session['oauth2_state'],
+        'scope': ' '.join(provider_data['scopes']), 'state': session['oauth2_state'],
     })
 
     # redirect the user to the OAuth2 provider authorization URL
