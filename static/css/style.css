@@ -1,35 +1,41 @@
 body {
-  font-family: sans-serif;
+    font-family: sans-serif;
 }
 
 button {
-  padding: 8px;
-  border-radius: 5px;
-  background-color: #3498db;
-  color: white;
-  margin-top: 10px;
-  border: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  &:hover {
-    filter: brightness(96%);
-    cursor: pointer;
-  }
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        filter: brightness(96%);
+        cursor: pointer;
+    }
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  max-width: 25%;
-
-  & input {
-    padding: 5px;
-  }
-
-  & button {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     max-width: 25%;
-    align-self: flex-end;
-  }
+
+    & .stravaId-container {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    & input {
+        padding: 5px;
+    }
+
+    & button {
+        max-width: 25%;
+        align-self: flex-end;
+    }
 }
 
 .route-information {
